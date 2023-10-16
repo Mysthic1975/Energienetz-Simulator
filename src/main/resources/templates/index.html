@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<head>
+    <title>Dashboard</title>
+</head>
+
+<div layout:fragment="content">
+    <h4 class="mb-3">Dashboard</h4>
+    <p>Gesamtmenge aktueller Ladezustand im Netzwerk: <span th:text="${totalCurrentStorage}"></span> MWh</p>
+</div>
+
+</html>
+
+
+

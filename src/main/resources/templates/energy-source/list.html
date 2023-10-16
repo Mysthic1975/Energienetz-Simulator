@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <title>Energiequellenliste</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">Energiequellenliste</h4>
+        <a th:href="@{/energy-sources/create}" class="btn btn-primary">Neue Energiequelle hinzufügen</a>
+        <div class="card-body">
+            <table class="dataTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Energiequelle Typ</th>
+                    <th>Maximale Kapazität (MWh)</th>
+                    <th>Aktueller Ladezustand (MWh)</th>
+                    <th>Energie-Netzwerk</th>
+                    <th>Bearbeiten</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Energiequelle Typ</th>
+                    <th>Maximale Kapazität (MWh)</th>
+                    <th>Aktueller Ladezustand (MWh)</th>
+                    <th>Energie-Netzwerk</th>
+                    <th>Bearbeiten</th>
+                </tr>
+                </tfoot>
+                <tbody>
+
+                <tr th:each="energySource : ${energySources}">
+                    <td th:text="${energySource.id}" />
+                    <td th:text="${energySource.energyType}" />
+                    <td th:text="${energySource.maxCapacity}" />
+                    <td th:text="${energySource.currentStorage}" />
+                    <td th:text="${energySource.energyNetwork.name}" />
+                    <td>
+                        <a th:href="@{'/energy-sources/edit/' + ${energySource.id}}" class="btn btn-primary">Bearbeiten</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="body-end">
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const table = document.querySelector('.dataTable');
+            const dataTable = new simpleDatatables.DataTable(table);
+            dataTable.ajax.reload();
+        });
+    </script>
+</div>
+</body>
+</html>
+

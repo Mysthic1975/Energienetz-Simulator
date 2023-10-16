@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <title>Ändern des aktuellen Verbrauchs</title>
+</head>
+<body>
+<h2>Ändern des aktuellen Verbrauchs</h2>
+<form th:action="@{'/consumers/' + ${consumerId} + '/current-consumption'}" method="post">
+    <div class="form-group">
+        <label for="currentConsumption">Aktueller Verbrauch (kWh):</label>
+        <input type="text" id="currentConsumption" name="currentConsumption" th:value="${currentConsumption}" />
+    </div>
+    <button type="submit">Speichern</button>
+</form>
+</body>
+</html>

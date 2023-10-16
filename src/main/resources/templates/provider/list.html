@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <title>Providerliste</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">Anbieterliste</h4>
+        <a th:href="@{/providers/create}" class="btn btn-primary">Neuen Provider hinzufügen</a>
+        <div class="card-body">
+            <table class="dataTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Betreibernummer</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Betreibernummer</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                <tr th:each="provider : ${providers}">
+                    <td th:text="${provider.getId()}"></td>
+                    <td th:text="${provider.getFirstName()}"></td>
+                    <td th:text="${provider.getLastName()}"></td>
+                    <td th:text="${provider.getProviderNumber()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="body-end">
+    <script>
+        window.addEventListener('DOMContentLoaded', event => {
+            const table = document.querySelector('.dataTable');
+            const dataTable = new simpleDatatables.DataTable(table);
+        });
+    </script>
+</div>
+</body>
