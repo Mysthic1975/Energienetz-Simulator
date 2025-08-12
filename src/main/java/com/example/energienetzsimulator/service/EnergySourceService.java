@@ -4,24 +4,18 @@ import com.example.energienetzsimulator.entity.EnergyNetwork;
 import com.example.energienetzsimulator.entity.EnergySource;
 import com.example.energienetzsimulator.entity.Provider;
 import com.example.energienetzsimulator.repository.EnergySourceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EnergySourceService {
     private final EnergySourceRepository energySourceRepository;
     private final EnergyNetworkService energyNetworkService;
     private final ProviderService providerService;
-
-    @Autowired
-    public EnergySourceService(EnergySourceRepository energySourceRepository, EnergyNetworkService energyNetworkService, ProviderService providerService) {
-        this.energySourceRepository = energySourceRepository;
-        this.energyNetworkService = energyNetworkService;
-        this.providerService = providerService;
-    }
 
     public List<EnergySource> getAllEnergySources() {
         return energySourceRepository.findAll();
@@ -30,32 +24,33 @@ public class EnergySourceService {
     public EnergySource getEnergySourceById(Long id) {
         return energySourceRepository.findById(id).orElse(null);
     }
+
     @Transactional
     public void createEnergySource(EnergySource energySource) {
-        if (energySource.getEnergyNetwork() != null && energySource.getEnergyNetwork().getId() != null
-                && energySource.getProvider() != null && energySource.getProvider().getId() != null) {
-            EnergyNetwork energyNetwork = energyNetworkService.getEnergyNetworkById(energySource.getEnergyNetwork().getId());
-            Provider provider = providerService.getProviderById(energySource.getProvider().getId());
+        if (energySource.getEnergyNetwork() == null || energySource.getEnergyNetwork().getId() == null) {
+            return;
+        }
+        if (energySource.getProvider() == null || energySource.getProvider().getId() == null) {
+            return;
+        }
 
-            if (energyNetwork != null && provider != null) {
-                energySource.setEnergyNetwork(energyNetwork);
-                energySource.setProvider(provider);
-                // Set other fields as needed
-                energySourceRepository.save(energySource);
-            }
+        EnergyNetwork energyNetwork = energyNetworkService.getEnergyNetworkById(energySource.getEnergyNetwork().getId());
+        Provider provider = providerService.getProviderById(energySource.getProvider().getId());
+
+        if (energyNetwork != null && provider != null) {
+            energySource.setEnergyNetwork(energyNetwork);
+            energySource.setProvider(provider);
+            energySourceRepository.save(energySource);
         }
     }
 
     public EnergySource updateEnergySource(Long id, EnergySource updatedEnergySource) {
-        EnergySource existingEnergySource = energySourceRepository.findById(id).orElse(null);
-        if (existingEnergySource != null) {
+        return energySourceRepository.findById(id).map(existingEnergySource -> {
             existingEnergySource.setEnergyType(updatedEnergySource.getEnergyType());
             existingEnergySource.setMaxCapacity(updatedEnergySource.getMaxCapacity());
             existingEnergySource.setCurrentStorage(updatedEnergySource.getCurrentStorage());
-
             return energySourceRepository.save(existingEnergySource);
-        }
-        return null;
+        }).orElse(null);
     }
 
     public void deleteEnergySource(Long id) {
@@ -63,15 +58,21 @@ public class EnergySourceService {
     }
 
     public EnergySource chargeEnergySource(Long id, double chargeAmount) {
-        EnergySource existingEnergySource = energySourceRepository.findById(id).orElse(null);
-        if (existingEnergySource != null) {
+        return energySourceRepository.findById(id).map(existingEnergySource -> {
             double currentStorage = existingEnergySource.getCurrentStorage();
             currentStorage += chargeAmount;
             existingEnergySource.setCurrentStorage(currentStorage);
-
             return energySourceRepository.save(existingEnergySource);
+        }).orElse(null);
+    }
+
+    public EnergySource assignProviderToEnergySource(Long energySourceId, Long providerId) {
+        EnergySource energySource = getEnergySourceById(energySourceId);
+        Provider provider = providerService.getProviderById(providerId);
+        if (energySource != null && provider != null) {
+            energySource.setProvider(provider);
+            return energySourceRepository.save(energySource);
         }
         return null;
     }
 }
-

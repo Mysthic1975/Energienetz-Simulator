@@ -2,20 +2,16 @@ package com.example.energienetzsimulator.controller;
 
 import com.example.energienetzsimulator.entity.EnergyNetwork;
 import com.example.energienetzsimulator.service.EnergyNetworkService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/energy-network")
+@RequestMapping("/energy-networks")
+@RequiredArgsConstructor
 public class EnergyNetworkController {
     private final EnergyNetworkService service;
-
-    @Autowired
-    public EnergyNetworkController(EnergyNetworkService service) {
-        this.service = service;
-    }
 
     @GetMapping("/create")
     public String showCreateForm() {
@@ -24,14 +20,33 @@ public class EnergyNetworkController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute EnergyNetwork energyNetwork) {
-        service.createEnergyNetwork(energyNetwork);
-        return "redirect:/energy-network/list";
+        EnergyNetwork createdEnergyNetwork = service.createEnergyNetwork(energyNetwork);
+        return "redirect:/energy-networks/list";
     }
 
     @GetMapping("/list")
     public String list(Model model) {
         model.addAttribute("energyNetworks", this.service.getAllEnergyNetworks());
         return "energy-network/list";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        EnergyNetwork energyNetwork = service.getEnergyNetworkById(id);
+        model.addAttribute("energyNetwork", energyNetwork);
+        return "energy-network/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, @ModelAttribute EnergyNetwork energyNetwork) {
+        EnergyNetwork updatedEnergyNetwork = service.updateEnergyNetwork(id, energyNetwork);
+        return "redirect:/energy-networks/list";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        service.deleteEnergyNetwork(id);
+        return "redirect:/energy-networks/list";
     }
 
     @GetMapping("/total-energy/{networkId}")
@@ -44,17 +59,4 @@ public class EnergyNetworkController {
 
         return "energy-network/total-energy";
     }
-
-    @GetMapping("/dashboard") // test
-    public String showDashboard(Model model) {
-
-        Long networkId = 1L;
-
-        double totalCurrentStorage = service.calculateTotalCurrentStorageInNetwork(networkId);
-
-        model.addAttribute("totalCurrentStorage", totalCurrentStorage);
-
-        return "index";
-    }
 }
-

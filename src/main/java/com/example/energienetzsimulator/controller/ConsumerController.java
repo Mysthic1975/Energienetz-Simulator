@@ -3,23 +3,18 @@ package com.example.energienetzsimulator.controller;
 import com.example.energienetzsimulator.entity.Consumer;
 import com.example.energienetzsimulator.service.ConsumerService;
 import com.example.energienetzsimulator.service.ConsumptionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/consumers")
+@RequiredArgsConstructor
 public class ConsumerController {
 
     private final ConsumerService consumerService;
     private final ConsumptionService consumptionService;
-
-    @Autowired
-    public ConsumerController(ConsumerService consumerService, ConsumptionService consumptionService) {
-        this.consumerService = consumerService;
-        this.consumptionService = consumptionService;
-    }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
@@ -29,7 +24,7 @@ public class ConsumerController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute Consumer consumer) {
-        consumerService.createConsumer(consumer);
+        Consumer createdConsumer = consumerService.createConsumer(consumer);
         return "redirect:/consumers/list";
     }
 
@@ -37,6 +32,25 @@ public class ConsumerController {
     public String list(Model model) {
         model.addAttribute("consumers", consumerService.getAllConsumers());
         return "consumer/list";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Consumer consumer = consumerService.getConsumerById(id);
+        model.addAttribute("consumer", consumer);
+        return "consumer/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, @ModelAttribute Consumer consumer) {
+        Consumer updatedConsumer = consumerService.updateConsumer(id, consumer);
+        return "redirect:/consumers/list";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        consumerService.deleteConsumer(id);
+        return "redirect:/consumers/list";
     }
 
     @GetMapping("/{consumerId}/current-consumption")
@@ -58,4 +72,3 @@ public class ConsumerController {
     }
 
 }
-

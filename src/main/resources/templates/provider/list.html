@@ -9,7 +9,7 @@
 <div layout:fragment="content">
     <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Anbieterliste</h4>
-        <a th:href="@{/providers/create}" class="btn btn-primary">Neuen Provider hinzufügen</a>
+        <a th:href="@{/providers/create}" class="btn btn-primary mb-3">Neuen Provider hinzufügen</a>
         <div class="card-body">
             <table class="dataTable">
                 <thead>
@@ -18,6 +18,7 @@
                     <th>Vorname</th>
                     <th>Nachname</th>
                     <th>Betreibernummer</th>
+                    <th>Aktionen</th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -26,6 +27,7 @@
                     <th>Vorname</th>
                     <th>Nachname</th>
                     <th>Betreibernummer</th>
+                    <th>Aktionen</th>
                 </tr>
                 </tfoot>
                 <tbody>
@@ -34,6 +36,12 @@
                     <td th:text="${provider.getFirstName()}"></td>
                     <td th:text="${provider.getLastName()}"></td>
                     <td th:text="${provider.getProviderNumber()}"></td>
+                    <td>
+                        <a th:href="@{/providers/edit/{id}(id=${provider.id})}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                        <form th:action="@{/providers/delete/{id}(id=${provider.id})}" th:method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sind Sie sicher?')">Löschen</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -45,8 +53,11 @@
     <script>
         window.addEventListener('DOMContentLoaded', event => {
             const table = document.querySelector('.dataTable');
-            const dataTable = new simpleDatatables.DataTable(table);
+            if (table) {
+                new simpleDatatables.DataTable(table);
+            }
         });
     </script>
 </div>
 </body>
+</html>

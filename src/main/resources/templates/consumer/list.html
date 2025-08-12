@@ -9,7 +9,7 @@
 <div layout:fragment="content">
     <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Verbraucherliste</h4>
-        <a th:href="@{/consumers/create}" class="btn btn-primary">Neuen Verbraucher hinzufügen</a>
+        <a th:href="@{/consumers/create}" class="btn btn-primary mb-3">Neuen Verbraucher hinzufügen</a>
         <div class="card-body">
             <table class="dataTable">
                 <thead>
@@ -18,7 +18,8 @@
                     <th>Vorname</th>
                     <th>Nachname</th>
                     <th>Kundennummer</th>
-                    <th>Erwarteter jährlicher Verbrauch</th>
+                    <th>Erwarteter Jahresverbrauch</th>
+                    <th>Aktionen</th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -27,7 +28,8 @@
                     <th>Vorname</th>
                     <th>Nachname</th>
                     <th>Kundennummer</th>
-                    <th>Erwarteter jährlicher Verbrauch</th>
+                    <th>Erwarteter Jahresverbrauch</th>
+                    <th>Aktionen</th>
                 </tr>
                 </tfoot>
                 <tbody>
@@ -37,6 +39,12 @@
                     <td th:text="${consumer.getLastName()}"></td>
                     <td th:text="${consumer.getCustomerNumber()}"></td>
                     <td th:text="${consumer.getExpectedAnnualUsage()}"></td>
+                    <td>
+                        <a th:href="@{/consumers/edit/{id}(id=${consumer.id})}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                        <form th:action="@{/consumers/delete/{id}(id=${consumer.id})}" th:method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sind Sie sicher?')">Löschen</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -48,8 +56,9 @@
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const table = document.querySelector('.dataTable');
-            const dataTable = new simpleDatatables.DataTable(table);
-            dataTable.ajax.reload();
+            if (table) {
+                new simpleDatatables.DataTable(table);
+            }
         });
     </script>
 </div>

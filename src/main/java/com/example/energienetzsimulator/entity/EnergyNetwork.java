@@ -1,8 +1,13 @@
 package com.example.energienetzsimulator.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@SuppressWarnings("ALL")
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class EnergyNetwork {
 
@@ -12,33 +17,4 @@ public class EnergyNetwork {
 
     @Column(name = "name")
     private String name;
-
-
-
-
-    public EnergyNetwork() {
-    }
-
-    // Getter und Setter für alle Felder
-
-    // ID des Energie-Netzwerks
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    // Name des Energie-Netzwerks
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 }
-
-

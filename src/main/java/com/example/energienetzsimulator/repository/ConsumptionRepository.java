@@ -11,8 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface ConsumptionRepository extends JpaRepository<Consumption, Long> {
     // Benutzerdefinierte Abfrage, um den aktuellen Verbrauch für einen Verbraucher abzurufen
     @Query("SELECT SUM(c.value) FROM Consumption c WHERE c.consumer.id = :consumerId")
-    default Double findCurrentConsumptionForConsumer(@Param("consumerId") Long consumerId) {
-        return null;
-    }
+    Double findCurrentConsumptionForConsumer(@Param("consumerId") Long consumerId);
 }
-

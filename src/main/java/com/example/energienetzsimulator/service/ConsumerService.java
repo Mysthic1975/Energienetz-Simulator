@@ -2,20 +2,16 @@ package com.example.energienetzsimulator.service;
 
 import com.example.energienetzsimulator.entity.Consumer;
 import com.example.energienetzsimulator.repository.ConsumerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ConsumerService {
 
     private final ConsumerRepository consumerRepository;
-
-    @Autowired
-    public ConsumerService(ConsumerRepository consumerRepository) {
-        this.consumerRepository = consumerRepository;
-    }
 
     // Methode zur Rückgabe aller Verbraucher
     public List<Consumer> getAllConsumers() {
@@ -34,16 +30,13 @@ public class ConsumerService {
 
     // Methode zur Aktualisierung eines Verbrauchers anhand seiner ID
     public Consumer updateConsumer(Long id, Consumer updatedConsumer) {
-        Consumer existingConsumer = consumerRepository.findById(id).orElse(null);
-        if (existingConsumer != null) {
+        return consumerRepository.findById(id).map(existingConsumer -> {
             existingConsumer.setFirstName(updatedConsumer.getFirstName());
             existingConsumer.setLastName(updatedConsumer.getLastName());
             existingConsumer.setCustomerNumber(updatedConsumer.getCustomerNumber());
             existingConsumer.setExpectedAnnualUsage(updatedConsumer.getExpectedAnnualUsage());
-
             return consumerRepository.save(existingConsumer);
-        }
-        return null;
+        }).orElse(null);
     }
 
     // Methode zum Löschen eines Verbrauchers anhand seiner ID
@@ -51,4 +44,3 @@ public class ConsumerService {
         consumerRepository.deleteById(id);
     }
 }
-

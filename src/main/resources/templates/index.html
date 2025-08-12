@@ -1,17 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="de" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout.html}">
-
 <head>
     <title>Dashboard</title>
 </head>
+<body>
 
 <div layout:fragment="content">
-    <h4 class="mb-3">Dashboard</h4>
-    <p>Gesamtmenge aktueller Ladezustand im Netzwerk: <span th:text="${totalCurrentStorage}"></span> MWh</p>
+    <h1 class="mt-4">Dashboard</h1>
+
+    <!-- Network Selection Form -->
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-network-wired me-1"></i>
+                    Energienetz auswählen
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/}" method="get">
+                        <div class="input-group">
+                            <select class="form-select" name="networkId">
+                                <option value="" th:disabled="${selectedNetwork != null}">Bitte Netzwerk auswählen...</option>
+                                <option th:each="network : ${allNetworks}"
+                                        th:value="${network.id}"
+                                        th:text="${network.name}"
+                                        th:selected="${selectedNetwork != null && selectedNetwork.id == network.id}"></option>
+                            </select>
+                            <button class="btn btn-primary" type="submit">Anzeigen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-cogs me-1"></i>
+                    Simulation
+                </div>
+                <div class="card-body">
+                    <div th:if="${selectedNetwork}">
+                        <form th:action="@{/simulate}" method="post">
+                            <input type="hidden" name="networkId" th:value="${selectedNetwork.id}" />
+                            <button type="submit" class="btn btn-success">Simuliere 1 Stunde Verbrauch</button>
+                        </form>
+                    </div>
+                    <div th:unless="${selectedNetwork}">
+                        <p class="text-muted">Bitte zuerst ein Netzwerk auswählen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${selectedNetwork}">
+        <h2 th:text="'Details für Netzwerk: ' + ${selectedNetwork.name}"></h2>
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie me-1"></i>
+                        Energieverteilung (Aktueller Speicher)
+                    </div>
+                    <div class="card-body">
+                        <canvas id="energyPieChart" width="100%" height="40"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-bolt me-1"></i>
+                        Aktueller Bedarf
+                    </div>
+                    <div class="card-body">
+                        <p class="fs-4" th:text="${#numbers.formatDecimal(totalDemand, 1, 2)} + ' MWh (pro Stunde)'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div layout:fragment="body-end">
+    <script th:if="${selectedNetwork}">
+        // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#292b2c';
+
+        // Pie Chart Example
+        var ctx = document.getElementById("energyPieChart");
+        var energySources = [[${sources}]];
+
+        var labels = energySources.map(source => source.energyType + ' (' + source.currentStorage.toFixed(2) + ' MWh)');
+        var data = energySources.map(source => source.currentStorage);
+
+        // Simple function to generate random colors
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        var backgroundColors = data.map(() => getRandomColor());
+
+        var myPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors,
+                }],
+            },
+        });
+    </script>
+</div>
+
+</body>
 </html>
-
-
-

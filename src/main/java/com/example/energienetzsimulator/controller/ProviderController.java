@@ -2,24 +2,17 @@ package com.example.energienetzsimulator.controller;
 
 import com.example.energienetzsimulator.entity.Provider;
 import com.example.energienetzsimulator.service.ProviderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/providers")
+@RequiredArgsConstructor
 public class ProviderController {
 
     private final ProviderService providerService;
-
-    @Autowired
-    public ProviderController(ProviderService providerService) {
-        this.providerService = providerService;
-    }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
@@ -29,7 +22,7 @@ public class ProviderController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute Provider provider) {
-        providerService.createProvider(provider);
+        Provider createdProvider = providerService.createProvider(provider);
         return "redirect:/providers/list";
     }
 
@@ -38,5 +31,23 @@ public class ProviderController {
         model.addAttribute("providers", providerService.getAllProviders());
         return "provider/list";
     }
-}
 
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Provider provider = providerService.getProviderById(id);
+        model.addAttribute("provider", provider);
+        return "provider/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, @ModelAttribute Provider provider) {
+        Provider updatedProvider = providerService.updateProvider(id, provider);
+        return "redirect:/providers/list";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        providerService.deleteProvider(id);
+        return "redirect:/providers/list";
+    }
+}

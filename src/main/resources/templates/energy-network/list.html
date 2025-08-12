@@ -9,26 +9,34 @@
 <div layout:fragment="content">
     <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Energienetzwerke</h4>
-        <a th:href="@{/energy-network/create}" class="btn btn-primary">Neues Netzwerk hinzufügen</a>
+        <a th:href="@{/energy-networks/create}" class="btn btn-primary mb-3">Neues Netzwerk hinzufügen</a>
         <div class="card-body">
             <table class="dataTable">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                    </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Aktionen</th>
+                </tr>
                 </thead>
                 <tfoot>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                    </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Aktionen</th>
+                </tr>
                 </tfoot>
                 <tbody>
-                    <tr th:each="energyNetwork : ${energyNetworks}">
-                        <td th:text="${energyNetwork.getId()}"></td>
-                        <td th:text="${energyNetwork.getName()}"></td>
-                    </tr>
+                <tr th:each="energyNetwork : ${energyNetworks}">
+                    <td th:text="${energyNetwork.getId()}"></td>
+                    <td th:text="${energyNetwork.getName()}"></td>
+                    <td>
+                        <a th:href="@{/energy-networks/edit/{id}(id=${energyNetwork.id})}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                        <form th:action="@{/energy-networks/delete/{id}(id=${energyNetwork.id})}" th:method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sind Sie sicher?')">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -39,7 +47,11 @@
     <script>
         window.addEventListener('DOMContentLoaded', event => {
             const table = document.querySelector('.dataTable');
-            const dataTable = new simpleDatatables.DataTable(table);
+            if (table) {
+                new simpleDatatables.DataTable(table);
+            }
         });
     </script>
 </div>
+</body>
+</html>

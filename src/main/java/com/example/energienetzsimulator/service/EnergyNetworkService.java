@@ -4,24 +4,17 @@ import com.example.energienetzsimulator.entity.EnergyNetwork;
 import com.example.energienetzsimulator.repository.EnergyNetworkRepository;
 import com.example.energienetzsimulator.entity.EnergySource;
 import com.example.energienetzsimulator.repository.EnergySourceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EnergyNetworkService {
 
     private final EnergyNetworkRepository energyNetworkRepository;
     private final EnergySourceRepository energySourceRepository;
-
-    @Autowired
-    public EnergyNetworkService(
-            EnergyNetworkRepository energyNetworkRepository,
-            EnergySourceRepository energySourceRepository) {
-        this.energyNetworkRepository = energyNetworkRepository;
-        this.energySourceRepository = energySourceRepository;
-    }
 
     public List<EnergyNetwork> getAllEnergyNetworks() {
         return energyNetworkRepository.findAll();
@@ -56,13 +49,10 @@ public class EnergyNetworkService {
     }
 
     public EnergyNetwork updateEnergyNetwork(Long id, EnergyNetwork updatedEnergyNetwork) {
-        EnergyNetwork existingEnergyNetwork = energyNetworkRepository.findById(id).orElse(null);
-        if (existingEnergyNetwork != null) {
+        return energyNetworkRepository.findById(id).map(existingEnergyNetwork -> {
             existingEnergyNetwork.setName(updatedEnergyNetwork.getName());
-
             return energyNetworkRepository.save(existingEnergyNetwork);
-        }
-        return null;
+        }).orElse(null);
     }
 
     public void deleteEnergyNetwork(Long networkId) {
@@ -84,7 +74,3 @@ public class EnergyNetworkService {
                 .sum();
     }
 }
-
-
-
-

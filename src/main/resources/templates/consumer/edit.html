@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <title>Verbraucher bearbeiten</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">Verbraucher bearbeiten</h4>
+        <form th:action="@{/consumers/edit/{id}(id=${consumer.id})}" th:object="${consumer}" class="needs-validation" method="post" novalidate>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <label for="firstName" class="form-label">Vorname</label>
+                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+                    <div class="invalid-feedback">
+                        Vorname ist notwendig.
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="lastName" class="form-label">Nachname</label>
+                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+                    <div class="invalid-feedback">
+                        Nachname ist notwendig.
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <label for="customerNumber" class="form-label">Kundennummer</label>
+                    <input type="text" class="form-control" id="customerNumber" th:field="*{customerNumber}" required>
+                    <div class="invalid-feedback">
+                        Kundennummer ist notwendig.
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="expectedAnnualUsage" class="form-label">Erwarteter jährlicher Verbrauch</label>
+                    <input type="text" class="form-control" id="expectedAnnualUsage" th:field="*{expectedAnnualUsage}" required>
+                    <div class="invalid-feedback">
+                        Erwarteter jährlicher Verbrauch ist notwendig.
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Änderungen speichern</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

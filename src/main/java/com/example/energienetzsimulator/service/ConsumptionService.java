@@ -1,21 +1,17 @@
 package com.example.energienetzsimulator.service;
 
 import com.example.energienetzsimulator.entity.Consumption;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.example.energienetzsimulator.repository.ConsumptionRepository;
 import com.example.energienetzsimulator.entity.Consumer;
 import com.example.energienetzsimulator.entity.EnergySource;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ConsumptionService {
 
     private final ConsumptionRepository consumptionRepository;
-
-    @Autowired
-    public ConsumptionService(ConsumptionRepository consumptionRepository) {
-        this.consumptionRepository = consumptionRepository;
-    }
 
     // Methode zum Erstellen eines Verbrauchseintrags
     public Consumption createConsumption(Consumer consumer, EnergySource energySource, Double value) {
@@ -29,19 +25,16 @@ public class ConsumptionService {
 
     // Methode zum Aktualisieren eines Verbrauchseintrags
     public Consumption updateConsumption(Long consumptionId, Double value) {
-        Consumption existingConsumption = consumptionRepository.findById(consumptionId).orElse(null);
-        if (existingConsumption != null) {
+        return consumptionRepository.findById(consumptionId).map(existingConsumption -> {
             existingConsumption.setValue(value);
-
             return consumptionRepository.save(existingConsumption);
-        }
-        return null;
+        }).orElse(null);
     }
 
     // Methode zum Abrufen des aktuellen Verbrauchs für einen Verbraucher
     public Double getCurrentConsumptionForConsumer(Long consumerId) {
-
-        return 0.0; // Hier einen Dummy-Wert einfügen
+        Double consumption = consumptionRepository.findCurrentConsumptionForConsumer(consumerId);
+        return consumption != null ? consumption : 0.0;
     }
 
     // Methode zum Löschen eines Verbrauchseintrags
@@ -50,4 +43,3 @@ public class ConsumptionService {
     }
 
 }
-
