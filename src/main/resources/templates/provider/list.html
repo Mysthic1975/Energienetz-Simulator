@@ -42,7 +42,8 @@
 
 <div layout:fragment="body-end">
     <script>
-        window.addEventListener('DOMContentLoaded', event => {
+        /* global simpleDatatables */
+        window.addEventListener('DOMContentLoaded', () => {
             const table = document.querySelector('.dataTable');
             if (table) {
                 new simpleDatatables.DataTable(table);

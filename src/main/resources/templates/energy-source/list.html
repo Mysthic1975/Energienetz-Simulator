@@ -42,9 +42,10 @@
 
 <div layout:fragment="body-end">
     <script>
+        /* global simpleDatatables */
         window.addEventListener('DOMContentLoaded', () => {
             const table = document.querySelector('.dataTable');
-            const dataTable = new simpleDatatables.DataTable(table);
+            new simpleDatatables.DataTable(table);
         });
     </script>
 </div>
