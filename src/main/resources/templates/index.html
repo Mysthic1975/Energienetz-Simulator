@@ -20,7 +20,8 @@
                 <div class="card-body">
                     <form th:action="@{/}" method="get">
                         <div class="input-group">
-                            <select class="form-select" name="networkId">
+                            <label for="networkSelect" class="visually-hidden">Energienetz auswählen</label>
+                            <select class="form-select" id="networkSelect" name="networkId">
                                 <option value="" th:disabled="${selectedNetwork != null}">Bitte Netzwerk auswählen...</option>
                                 <option th:each="network : ${allNetworks}"
                                         th:value="${network.id}"
@@ -85,30 +86,31 @@
 
 <div layout:fragment="body-end">
     <script th:if="${selectedNetwork}">
+        /* global Chart */
         // Set new default font family and font color to mimic Bootstrap's default styling
-        Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-        Chart.defaults.global.defaultFontColor = '#292b2c';
+        Chart.default.font.family = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.default.font.color = '#292b2c';
 
         // Pie Chart Example
-        var ctx = document.getElementById("energyPieChart");
-        var energySources = [[${sources}]];
+        const ctx = document.getElementById("energyPieChart");
+        const energySources = /*[[${sources}]]*/ '[]';
 
-        var labels = energySources.map(source => source.energyType + ' (' + source.currentStorage.toFixed(2) + ' MWh)');
-        var data = energySources.map(source => source.currentStorage);
+        const labels = energySources.map(source => source.energyType + ' (' + source.currentStorage.toFixed(2) + ' MWh)');
+        const data = energySources.map(source => source.currentStorage);
 
         // Simple function to generate random colors
         function getRandomColor() {
-            var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
+            const letters = '0123456789ABCDEF'.split('');
+            let color = '#';
+            for (let i = 0; i < 6; i++ ) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
         }
 
-        var backgroundColors = data.map(() => getRandomColor());
+        const backgroundColors = data.map(() => getRandomColor());
 
-        var myPieChart = new Chart(ctx, {
+        new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: labels,
