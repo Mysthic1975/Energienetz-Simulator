@@ -21,15 +21,6 @@
                     <th>Aktionen</th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>Betreibernummer</th>
-                    <th>Aktionen</th>
-                </tr>
-                </tfoot>
                 <tbody>
                 <tr th:each="provider : ${providers}">
                     <td th:text="${provider.getId()}"></td>
@@ -37,8 +28,8 @@
                     <td th:text="${provider.getLastName()}"></td>
                     <td th:text="${provider.getProviderNumber()}"></td>
                     <td>
-                        <a th:href="@{/providers/edit/{id}(id=${provider.id})}" class="btn btn-sm btn-secondary">Bearbeiten</a>
-                        <form th:action="@{/providers/delete/{id}(id=${provider.id})}" th:method="post" style="display:inline;">
+                        <a th:href="@{'/providers/edit/' + ${provider.id}}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                        <form th:action="@{'/providers/delete/' + ${provider.id}}" th:method="post" style="display:inline;">
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sind Sie sicher?')">Löschen</button>
                         </form>
                     </td>

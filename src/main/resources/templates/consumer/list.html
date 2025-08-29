@@ -22,16 +22,6 @@
                     <th>Aktionen</th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>Kundennummer</th>
-                    <th>Erwarteter Jahresverbrauch</th>
-                    <th>Aktionen</th>
-                </tr>
-                </tfoot>
                 <tbody>
                 <tr th:each="consumer : ${consumers}">
                     <td th:text="${consumer.getId()}"></td>
@@ -40,8 +30,8 @@
                     <td th:text="${consumer.getCustomerNumber()}"></td>
                     <td th:text="${consumer.getExpectedAnnualUsage()}"></td>
                     <td>
-                        <a th:href="@{/consumers/edit/{id}(id=${consumer.id})}" class="btn btn-sm btn-secondary">Bearbeiten</a>
-                        <form th:action="@{/consumers/delete/{id}(id=${consumer.id})}" th:method="post" style="display:inline;">
+                        <a th:href="@{'/consumers/edit/' + ${consumer.id}}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                        <form th:action="@{'/consumers/delete/' + ${consumer.id}}" th:method="post" style="display:inline;">
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sind Sie sicher?')">Löschen</button>
                         </form>
                     </td>

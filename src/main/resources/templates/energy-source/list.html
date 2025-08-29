@@ -22,16 +22,6 @@
                     <th>Bearbeiten</th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Energiequelle Typ</th>
-                    <th>Maximale Kapazität (MWh)</th>
-                    <th>Aktueller Ladezustand (MWh)</th>
-                    <th>Energie-Netzwerk</th>
-                    <th>Bearbeiten</th>
-                </tr>
-                </tfoot>
                 <tbody>
 
                 <tr th:each="energySource : ${energySources}">
@@ -55,10 +45,8 @@
         window.addEventListener('DOMContentLoaded', () => {
             const table = document.querySelector('.dataTable');
             const dataTable = new simpleDatatables.DataTable(table);
-            dataTable.ajax.reload();
         });
     </script>
 </div>
 </body>
 </html>
-

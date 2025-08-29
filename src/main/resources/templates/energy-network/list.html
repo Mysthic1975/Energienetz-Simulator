@@ -19,20 +19,13 @@
                     <th>Aktionen</th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Aktionen</th>
-                </tr>
-                </tfoot>
                 <tbody>
                 <tr th:each="energyNetwork : ${energyNetworks}">
                     <td th:text="${energyNetwork.getId()}"></td>
                     <td th:text="${energyNetwork.getName()}"></td>
                     <td>
-                        <a th:href="@{/energy-networks/edit/{id}(id=${energyNetwork.id})}" class="btn btn-sm btn-secondary">Bearbeiten</a>
-                        <form th:action="@{/energy-networks/delete/{id}(id=${energyNetwork.id})}" th:method="post" style="display:inline;">
+                        <a th:href="@{'/energy-networks/edit/' + ${energyNetwork.id}}" class="btn btn-sm btn-secondary">Bearbeiten</a>
+                        <form th:action="@{'/energy-networks/delete/' + ${energyNetwork.id}}" th:method="post" style="display:inline;">
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sind Sie sicher?')">Löschen</button>
                         </form>
                     </td>
